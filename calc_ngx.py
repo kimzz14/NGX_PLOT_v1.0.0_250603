@@ -7,8 +7,8 @@ parser.add_option("-p","--prefix",action = 'store',type = 'string',dest = 'prefi
 parser.add_option("-t","--threadN",action = 'store',type = 'int',dest = 'threadN',help = "")
 parser.add_option("-g","--genomeSize",action = 'store',type = 'int',dest = 'genomeSize',help = "")
 (opt, args) = parser.parse_args()
-if opt.threadN == None or opt.prefix == None or opt.genomeSize == None:
-    print("Error! usage: calc_ngx.py -t 24 -p keumgang -g 16000000000")
+if opt.threadN == None or opt.prefix == None:
+    print("Error! usage: calc_ngx.py -t 24 -p keumgang -g 16000000000(option)")
     sys.exit()
 batchN = opt.threadN
 prefix = opt.prefix
@@ -119,12 +119,28 @@ for seqName in ref.seqName_LIST:
 #Statistics_Length
 statistics_Length = Statistics_Length(length_LIST)
 
-#NG1 ~ NG100
-fout = open(prefix + '.' + 'NG', 'w')
-for x in range(1, 101):
-    NG, LG = statistics_Length.get_NG(x, genomeSize)
-    fout.write(f'NG{x}\t{NG}\tLG{x}\t{LG}\n')
+fout = open(prefix + '.contig', 'w')
+for seqName in ref.seqName_LIST:
+    for result in result_DICT[seqName]:
+        fout.write('\t'.join(map(str, result)) + '\n')
 fout.close()
+
+
+#NG1 ~ NG100
+fout = open(prefix + '.' + 'N', 'w')
+for x in range(1, 101):
+    N, L = statistics_Length.get_N(x)
+    fout.write(f'N{x}\t{N}\tL{x}\t{L}\n')
+fout.close()
+
+
+if opt.genomeSize != None:
+    #NG1 ~ NG100
+    fout = open(prefix + '.' + 'NG', 'w')
+    for x in range(1, 101):
+        NG, LG = statistics_Length.get_NG(x, genomeSize)
+        fout.write(f'NG{x}\t{NG}\tLG{x}\t{LG}\n')
+    fout.close()
 
 
 
