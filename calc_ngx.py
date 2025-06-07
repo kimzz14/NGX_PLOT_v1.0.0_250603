@@ -109,6 +109,13 @@ class Statistics_Length:
 
 #####################################################################################
 ref = MFA(prefix + '.fa')
+fout = open(prefix + '.length', 'w')
+length = 0
+for seqName, sequence in ref.seq_DICT.items():
+    length += len(sequence)
+fout.write(str(length) + '\n')
+fout.close()
+
 result_DICT = run_batch(ref.seq_DICT, batchN)
 
 length_LIST = []
